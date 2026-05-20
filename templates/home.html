@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FWI Prediction</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f5f5f0;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    .header-icon {
+      width: 56px; height: 56px;
+      background: #FAECE7;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 12px;
+    }
+    .card {
+      border: 1px solid #e5e5e0;
+      border-radius: 14px;
+      padding: 2rem;
+      background: #fff;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      margin: 1.2rem 0 0.6rem;
+    }
+    .form-control {
+      border-radius: 8px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+    }
+    .form-control:focus {
+      border-color: #D85A30;
+      box-shadow: 0 0 0 3px rgba(216, 90, 48, 0.15);
+    }
+    .form-label {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 4px;
+    }
+    .btn-predict {
+      background-color: #D85A30;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 15px;
+      font-weight: 500;
+      width: 100%;
+      margin-top: 1.2rem;
+    }
+    .btn-predict:hover { background-color: #993C1D; color: white; }
+    .result-box {
+      margin-top: 1rem;
+      padding: 1rem 1.25rem;
+      background: #EAF3DE;
+      border: 1px solid #97C459;
+      border-radius: 8px;
+    }
+    .result-box p { margin: 0; color: #3B6D11; font-size: 13px; }
+    .result-box h2 { margin: 4px 0 0; color: #27500A; font-size: 26px; font-weight: 600; }
+    .badge-ml {
+      font-size: 11px;
+      background: #FAECE7;
+      color: #993C1D;
+      border-radius: 20px;
+      padding: 2px 10px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="text-center mb-4">
+    <div class="header-icon">&#128293;</div>
+    <h1 class="fs-4 mb-1">FWI Prediction <span class="badge-ml">ML Model</span></h1>
+    <p class="text-muted" style="font-size:14px;">
+      Forest Fire Weather Index — enter environmental data to predict fire risk
+    </p>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card">
+
+    <!-- ✅ correct route -->
+    <form action="/predictData" method="post">
+
+      <!-- Weather -->
+      <div class="section-label">&#127777; Weather Conditions</div>
+      <div class="row g-2">
+        <div class="col-6">
+          <label class="form-label">Temperature (°C)</label>
+          <input type="text" class="form-control" name="Temperature" placeholder="e.g. 29" required />
+        </div>
+        <div class="col-6">
+          <label class="form-label">RH — Relative Humidity (%)</label>
+          <input type="text" class="form-control" name="RH" placeholder="e.g. 57" required />
+        </div>
+        <div class="col-6">
+          <label class="form-label">Ws — Wind Speed (km/h)</label>
+          <input type="text" class="form-control" name="Ws" placeholder="e.g. 18" required />
+        </div>
+        <div class="col-6">
+          <label class="form-label">Rain (mm)</label>
+          <input type="text" class="form-control" name="Rain" placeholder="e.g. 0.0" required />
+        </div>
+      </div>
+
+      <!-- Fire Indices -->
+      <hr class="my-3">
+      <div class="section-label">&#128200; Fire Indices</div>
+      <div class="row g-2">
+        <div class="col-3">
+          <label class="form-label">FFMC</label>
+          <input type="text" class="form-control" name="FFMC" placeholder="e.g. 91.0" required />
+        </div>
+        <div class="col-3">
+          <label class="form-label">DMC</label>
+          <input type="text" class="form-control" name="DMC" placeholder="e.g. 130" required />
+        </div>
+        <div class="col-3">
+          <label class="form-label">DC</label>
+          <input type="text" class="form-control" name="DC" placeholder="e.g. 7.6" required />
+        </div>
+        <div class="col-3">
+          <label class="form-label">ISI</label>
+          <input type="text" class="form-control" name="ISI" placeholder="e.g. 9.0" required />
+        </div>
+      </div>
+
+      <!-- Classification -->
+      <hr class="my-3">
+      <div class="section-label">&#128205; Classification</div>
+      <div class="row g-2">
+        <div class="col-6">
+          <label class="form-label">Classes (0 or 1)</label>
+          <input type="text" class="form-control" name="Classes" placeholder="0 = no fire, 1 = fire" required />
+        </div>
+        <div class="col-6">
+          <label class="form-label">Region (0 or 1)</label>
+          <input type="text" class="form-control" name="Region" placeholder="0 or 1" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-predict">&#9889; Predict FWI</button>
+
+    </form>
+
+    <!-- Result -->
+    {% if result %}
+    <div class="result-box mt-3">
+      <p>The FWI prediction is</p>
+      <h2>{{ result }}</h2>
+    </div>
+    {% endif %}
+
+  </div>
+
+</body>
+</html>
